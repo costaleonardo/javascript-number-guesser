@@ -7,40 +7,35 @@
 * - Let player choose to play again
 */
 
-// --- Variables
-// ----------------------
+// Get winning number
+const getRandomNum = (min, max) => {
+  return Math.floor(Math.random() * (max - min + 1) + min);
+}
 
 // Game values
 let min = 1,
     max = 10,
-    winningNum = getRandomNum(min, max),
+    winningNum  = getRandomNum(min, max),
     guessesLeft = 3;
 
-// UI element
+// UI elements
 const game = document.querySelector('#game'),
       minNum = document.querySelector('.min-num'),
-      maxNum = document.querySelector('#guess-btn'),
-      guessBtn = document.querySelector('#guess-input'),
+      maxNum = document.querySelector('.max-num'),
+      guessBtn = document.querySelector('#guess-btn'),
+      guessInput = document.querySelector('#guess-input'),
       message = document.querySelector('.message');
 
-// --- Functions
-// ----------------------
-
-// Get winning random number
-const getRandomNum = () => {
-  return Math.floor(Math.random() * (max - min + 1) + min);
-};
-
-// Set message
-const setMessage = (msg, clr) => {
-  message.styel.color = clr;
+// Functions
+const setMessage = (msg, color) => {
+  message.style.color = color;
   message.textContent = msg;
-};
+}
 
-// Game gameOver
-const gameOver = (won msg) => {
+const gameOver = (won, msg) => {
   let color;
-  won === true ? color = 'green' : color 'red';
+  won === true ? color = 'green' : color = 'red';
+
   // Disable input
   guessInput.disabled = true;
   // Change border color
@@ -49,51 +44,53 @@ const gameOver = (won msg) => {
   message.style.color = color;
   // Set message
   setMessage(msg);
+
   // Play again
   guessBtn.value = 'Play Again';
   guessBtn.className += 'play-again';
-};
+}
 
-// --- Events
-// ----------------------
+// Assign UI min anx max
+minNum.textContent = min;
+maxNum.textContent = max;
 
+// Listen for guess
 guessBtn.addEventListener('click', () => {
+  const guess = parseInt(guessInput.value);
+
   // Validate
-  if (isNaN(guess) || guess < min || guess > max) {
-    setMessage(`Please enter a number between ${min} and ${max}.`);
+  if(isNaN(guess) || guess < min || guess > max) {
+    setMessage(`Please enter a number between ${min} and ${max}.`, 'red');
   }
 
-  // Check for result
-  if (guess === winningNum) {
-    gameOver(true, winning + ' is correct');
-    gameOver(true, `${winning} is correct.`);
+  // Check if won
+  if(guess === winningNum) {
+    gameOver(true, `${winningNum} is correct.`);
   } else {
     // Wrong number
     guessesLeft -= 1;
 
-    if (guessesLeft === 0) {
-      // Game over
-      gameOver(false, `Game over. The correct number was ${winningNum}.`);
+    if(guessesLeft === 0) {
+      // Game over - lost
+
+      gameOver(false, `Game over, you lost. The correct number was ${winningNum}`);
     } else {
-      // Game continues
+      // Game continues - answer wrong
+
       // Change border color
       guessInput.style.borderColor = 'red';
       // Tell user it's the wrong number
-      setMessage(guess + ' is not correct, ' + guessesLeft + ' guesses left.', 'red');
       setMessage(`${guess} is not correct, ${guessesLeft} guesses left.`, 'red');
-      // Clear guessInput
+
+      // Clear input
       guessInput.value = '';
     }
   }
 });
 
-// Play again
+// Play again event listener
 game.addEventListener('mousedown', e => {
-  if (e.target.className === 'play-again') {
+  if(e.target.className === 'play-again') {
     window.location.reload();
   }
 });
-
-// Assign UI min anx max
-minNum.textContent = min;
-maxNum.textContent = max;
