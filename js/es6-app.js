@@ -8,9 +8,7 @@
 */
 
 // Get winning number
-const getRandomNum = (min, max) => {
-  return Math.floor(Math.random() * (max - min + 1) + min);
-}
+const getRandomNum = (min, max) => Math.floor(Math.random() * (max - min + 1) + min);
 
 // Game values
 let min = 1,
@@ -36,14 +34,10 @@ const gameOver = (won, msg) => {
   let color;
   won === true ? color = 'green' : color = 'red';
 
-  // Disable input
-  guessInput.disabled = true;
-  // Change border color
-  guessInput.style.borderColor = color;
-  // Set text color
-  message.style.color = color;
-  // Set message
-  setMessage(msg);
+  guessInput.disabled = true; // Disable input
+  guessInput.style.borderColor = color; // Change border color
+  message.style.color = color; // Set text color
+  setMessage(msg); // Set message
 
   // Play again
   guessBtn.value = 'Play Again';
@@ -72,11 +66,8 @@ guessBtn.addEventListener('click', () => {
 
     if(guessesLeft === 0) {
       // Game over - lost
-
       gameOver(false, `Game over, you lost. The correct number was ${winningNum}`);
     } else {
-      // Game continues - answer wrong
-
       // Change border color
       guessInput.style.borderColor = 'red';
       // Tell user it's the wrong number
